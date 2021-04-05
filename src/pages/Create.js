@@ -1,5 +1,6 @@
 import React from 'react'
 import { Typography, Button, ButtonGroup, Container } from '@material-ui/core';
+import { KeyboardArrowRight } from '@material-ui/icons';
 
 export default function Create() {
   return (
@@ -13,16 +14,21 @@ export default function Create() {
         Create a new Note
       </Typography>
 
-      <Button type='submit' color='secondary' variant='contained' >Submit</Button>
+      <Button
+        type='submit'
+        color='secondary'
+        variant='contained'
+        endIcon={<KeyboardArrowRight />}
+      >
+        Submit
+      </Button>
 
-      {/* <Button variant='contained' color='primary' type='submit'>Submit</Button>
-      <Button variant='outlined' color='secondary' type='submit'>Submit</Button>
-
-      <ButtonGroup color='secondary' variant='contained'>
-        <Button>One</Button>
-        <Button>Two</Button>
-        <Button>Three</Button>
-      </ButtonGroup> */}
+      <br />
+      <KeyboardArrowRight
+        color='primary'
+        fontSize='large'
+        component='span'
+      />
     </Container>
   )
 }
