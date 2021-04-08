@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme) => {
 }
 )
 
-const Layout = ({ children }) => {
+const Layout = ({ children, notes }) => {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
@@ -100,6 +100,7 @@ const Layout = ({ children }) => {
   const date = new Date;
   let hours = date.getHours();
 
+  console.log(notes);
   const menuItems = [
     {
       title: 'My notes',
@@ -113,6 +114,12 @@ const Layout = ({ children }) => {
     },
 
   ];
+
+  const handleSearch = (term) => {
+    // if(note.title.contains(term)) {
+    // show filtered Notes
+    // }
+  }
 
   return (
     <div className={classes.root}>
@@ -130,6 +137,7 @@ const Layout = ({ children }) => {
               <SearchIcon />
             </div>
             <InputBase
+              onChange={handleSearch}
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
@@ -141,7 +149,7 @@ const Layout = ({ children }) => {
 
           <Typography>
             {(hours < 12) ? "Good Morning" :
-              ((hours <= 18 && hours >= 12) ? "Good Afternoon" : " Good Evening")} Jeonghak!
+              ((hours >= 12 && hours <= 18) ? "Good Afternoon" : " Good Evening")} Jeonghak!
           </Typography>
           <Avatar src='Me.jpg' className={classes.avatar} />
         </ToolBar>
