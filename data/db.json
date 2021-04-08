@@ -17,6 +17,30 @@
       "details": "Pay rent",
       "category": "money",
       "id": 4
+    },
+    {
+      "title": "Work",
+      "details": "HongJiao on Wednesday",
+      "category": "work",
+      "id": 5
+    },
+    {
+      "title": "Grocery shopping",
+      "details": "Buy 🍉 ",
+      "category": "todos",
+      "id": 6
+    },
+    {
+      "title": "Assignment Submission",
+      "details": "Small IT Business assignment due by 15th April Thursday",
+      "category": "reminders",
+      "id": 7
+    },
+    {
+      "title": "Play mario kart",
+      "details": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia optio incidunt saepe expedita iusto eum inventore fuga a corporis. Maxime consequatur aliquid obcaecati distinctio, nulla quibusdam ",
+      "category": "todos",
+      "id": 10
     }
   ]
 }
