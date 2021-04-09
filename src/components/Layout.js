@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom';
 import { fade, makeStyles, Drawer, Typography } from '@material-ui/core';
 import List from '@material-ui/core/List';
@@ -12,8 +13,11 @@ import ToolBar from '@material-ui/core/Toolbar';
 import Avatar from '@material-ui/core/Avatar';
 import { format } from 'date-fns';
 
-const drawerWidth = 240;
 
+import { connect } from 'react-redux';
+import search from '../reducers/search';
+
+const drawerWidth = 240;
 const useStyles = makeStyles((theme) => {
   return {
     root: {
@@ -92,7 +96,8 @@ const useStyles = makeStyles((theme) => {
 }
 )
 
-const Layout = ({ children, notes }) => {
+
+const Layout = ({ children, data }) => {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
@@ -100,7 +105,21 @@ const Layout = ({ children, notes }) => {
   const date = new Date;
   let hours = date.getHours();
 
-  console.log(notes);
+
+  const [searchValue, setSearchValue] = useState('');
+  const [notes, setNewNotes] = useState([]);
+
+  const handleSearch = (e) => {
+    setSearchValue(e.target.value.toLowerCase())
+    const newData = data.filter(note => {
+      if (e.target.value === '') return false
+      return note.title.indexOf(e.target.value.toLowerCase()) !== -1
+    })
+
+    setNewNotes(newData);
+    console.log(newData)
+  }
+
   const menuItems = [
     {
       title: 'My notes',
@@ -114,12 +133,6 @@ const Layout = ({ children, notes }) => {
     },
 
   ];
-
-  const handleSearch = (term) => {
-    // if(note.title.contains(term)) {
-    // show filtered Notes
-    // }
-  }
 
   return (
     <div className={classes.root}>
@@ -137,7 +150,8 @@ const Layout = ({ children, notes }) => {
               <SearchIcon />
             </div>
             <InputBase
-              onChange={handleSearch}
+              value={searchValue}
+              onChange={e => handleSearch(e)}
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
@@ -194,4 +208,10 @@ const Layout = ({ children, notes }) => {
   )
 }
 
-export default Layout
+const mapStateToProps = (state) => {
+  return {
+    data: state.search.data
+  }
+}
+
+export default connect(mapStateToProps)(Layout)

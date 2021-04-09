@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Container, Grid } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import NoteCard from '../components/NoteCard';
 import Masonry from 'react-masonry-css';
+import { connect } from 'react-redux';
 
-export default function Notes({ notes, setNotes }) {
+
+const Notes = ({ notes, setNotes, data }) => {
+
 
   const handleDelete = async (id) => {
     await fetch('http://localhost:8000/note/' + id, {
@@ -18,6 +21,7 @@ export default function Notes({ notes, setNotes }) {
     1100: 2,
     700: 1
   }
+
   return (
     <Container>
       <Masonry
@@ -26,9 +30,9 @@ export default function Notes({ notes, setNotes }) {
         columnClassName="my-masonry-grid_column"
       >
         {
-          notes.map(note => (
-            <div key={note.id}>
-              <NoteCard note={note} handleDelete={handleDelete} />
+          data.map(data => (
+            <div key={data.id}>
+              <NoteCard note={data} handleDelete={handleDelete} />
             </div>
           ))
         }
@@ -36,3 +40,11 @@ export default function Notes({ notes, setNotes }) {
     </Container>
   )
 }
+
+const mapStateToProps = (state) => {
+  return {
+    data: state.search.data
+  }
+}
+
+export default connect(mapStateToProps)(Notes)

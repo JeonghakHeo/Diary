@@ -56,14 +56,19 @@ const useStyles = makeStyles((theme) => {
       textAlign: 'center',
       width: '400px',
       padding: 50,
-      paddingTop: 30,
+      paddingTop: 20,
       position: 'absolute',
       top: '20%',
-      outline: 'none'
+      outline: 'none',
+      borderRadius: 4
     },
     delete: {
       fontSize: '100px',
       color: amber[200]
+    },
+    close: {
+      marginLeft: '100%',
+      marginBottom: '5%'
     },
     margin: {
       margin: theme.spacing(1)
@@ -113,37 +118,37 @@ const NoteCard = ({ note, handleDelete }) => {
           }
           action={
             <>
-              <IconButton>
-                <DeleteOutlined onClick={handleOpen} />
-                <Modal
-                  aria-labelledby='transition-modal-title'
-                  aria-describedby='transition-modal-description'
-                  className={classes.modal}
-                  open={open}
-                  onClose={handleClose}
-                  closeAfterTransition
-                  BackdropComponent={Backdrop}
-                  BackdropProps={{
-                    timeout: 500,
-                  }}
-                >
-                  <Fade in={open}>
-                    <div className={classes.paper}>
-                      <div styles={{ position: 'absolute' }} >
-                        <IconButton size='small' onClick={handleClose}><CloseIcon /></IconButton>
-                      </div>
-                      <ErrorOutlineOutlinedIcon className={classes.delete} />
-                      <Typography variant='h5' component='h2' id='transition-modal-title'>Are you sure?</Typography>
-                      <Typography component='p' fontSize='1rem' gutterBottom color='textSecondary'>If you delete it, you can't recover it.</Typography>
-                      <Button className={classes.margin} variant='contained' color='white' onClick={handleClose}>Cancel</Button>
-                      <Button className={classes.margin} variant='contained' color='secondary' onClick={() => handleDelete(note.id)}>Delete</Button>
-                    </div>
-                  </Fade>
-                </Modal>
+              <IconButton onClick={handleOpen}>
+                <DeleteOutlined />
               </IconButton>
+              <Modal
+                aria-labelledby='transition-modal-title'
+                aria-describedby='transition-modal-description'
+                className={classes.modal}
+                open={open}
+                onClose={handleClose}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+              >
+                <Fade in={open}>
+                  <div className={classes.paper}>
+                    <div styles={{ position: 'absolute' }} >
+                      <IconButton size='small' className={classes.close} onClick={handleClose}><CloseIcon /></IconButton>
+                    </div>
+                    <ErrorOutlineOutlinedIcon className={classes.delete} />
+                    <Typography variant='h5' component='h2' id='transition-modal-title'>Are you sure?</Typography>
+                    <Typography component='p' fontSize='1rem' gutterBottom color='textSecondary'>If you delete it, you can't recover it.</Typography>
+                    <Button className={classes.margin} variant='contained' color='default' onClick={handleClose}>Cancel</Button>
+                    <Button className={classes.margin} variant='contained' color='secondary' onClick={() => handleDelete(note.id)}>Delete</Button>
+                  </div>
+                </Fade>
+              </Modal>
             </>
           }
-          title={note.title}
+          title={note.title[0].toUpperCase() + note.title.slice(1, note.title.length)}
           subheader={note.category}
         />
 
@@ -159,8 +164,8 @@ const NoteCard = ({ note, handleDelete }) => {
               Edit
             </Button>
           </Link>
-          <IconButton>
-            <StarBorderRoundedIcon onClick={handleFavorite} />
+          <IconButton onClick={handleFavorite} >
+            <StarBorderRoundedIcon />
           </IconButton>
         </CardActions>
       </Card>

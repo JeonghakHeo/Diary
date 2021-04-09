@@ -5,7 +5,7 @@ import Create from './pages/Create'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core'
 import Layout from './components/Layout'
 
-import { Provider } from 'react-redux';
+import { Provider } from 'react-redux'
 import store from './store'
 
 const theme = createMuiTheme({
@@ -36,10 +36,14 @@ function App() {
         <Router>
           <Layout notes={notes}>
             <Switch>
-              <Route exact path="/">
+              <Route exact path='/'>
                 <Notes notes={notes} setNotes={setNotes} />
               </Route>
-              <Route path="/create">
+              {/* <Route
+                component={(routeProps) => <Notes notes={notes} setNotes={setNotes} {...routeProps} />}
+                exact path='/'
+              /> */}
+              <Route path='/create'>
                 <Create />
               </Route>
             </Switch>
