@@ -15,7 +15,7 @@ import { format } from 'date-fns';
 
 
 import { connect } from 'react-redux';
-import search from '../reducers/search';
+import search from '../../reducers/search';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => {
@@ -165,7 +165,7 @@ const Layout = ({ children, data }) => {
             {(hours < 12) ? "Good Morning" :
               ((hours >= 12 && hours <= 18) ? "Good Afternoon" : " Good Evening")} Jeonghak!
           </Typography>
-          <Avatar src='Me.jpg' className={classes.avatar} />
+          <Avatar src='/images/me.jpg' className={classes.avatar} />
         </ToolBar>
       </AppBar>
 
