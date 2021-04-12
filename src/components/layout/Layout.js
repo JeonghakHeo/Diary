@@ -124,7 +124,7 @@ const Layout = ({ children, data }) => {
     {
       title: 'My notes',
       icon: <SubjectOutlined color='primary' />,
-      path: '/'
+      path: '/note'
     },
     {
       title: 'Create',
