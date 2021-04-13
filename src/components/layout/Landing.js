@@ -21,7 +21,7 @@ const Landing = () => {
                 <Button variant='contained'>Learn more</Button>
               </Box>
             </Link>
-            <Link to='/login'>
+            <Link to='/signup'>
               <Box component='span' mx={1}>
                 <Button variant='contained' color='primary'>Get started</Button>
               </Box>

@@ -24,6 +24,7 @@ export const Routes = () => {
           <Route exact path='/note'><Notes notes={notes} setNotes={setNotes} /></Route>
           <Route exact path='/create'><Create /></Route>
         </Layout>
+        <Route path='*' component={NotFound} />
       </Switch>
     </>
   )

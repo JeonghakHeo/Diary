@@ -9,6 +9,7 @@ import NotFound from './components/layout/NotFound'
 import { Provider } from 'react-redux'
 import store from './store'
 import Routes from './components/routing/Routes'
+import Signup from './pages/Signup'
 
 const theme = createMuiTheme({
   typography: {
@@ -38,6 +39,7 @@ function App() {
         <Router>
           <Switch>
             <Landing exact path='/' />
+            <Signup exact path='/signup' />
             <Route component={Routes} />
             <Route path='*' component={NotFound} />
           </Switch>

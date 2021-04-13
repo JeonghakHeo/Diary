@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Typography, Button, ButtonGroup, Container, FormControlLabel, FormLabel, FormControl } from '@material-ui/core';
+import { Typography, Button, Container, FormControlLabel, FormLabel, FormControl } from '@material-ui/core';
 import { Radio, RadioGroup } from '@material-ui/core';
 import { KeyboardArrowRight } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core';
@@ -30,11 +30,11 @@ export default function Create() {
     setTitleError(false);
     setDetailsError(false);
 
-    if (titleError == '') {
+    if (title == '') {
       setTitleError(true)
     }
 
-    if (detailsError == '') {
+    if (details == '') {
       setDetailsError(true)
     }
 
