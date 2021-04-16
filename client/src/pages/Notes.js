@@ -3,19 +3,23 @@ import { Container } from '@material-ui/core';
 import NoteCard from '../components/NoteCard';
 import Masonry from 'react-masonry-css';
 import { connect } from 'react-redux';
+import { getNotes } from '../actions/note';
+
+const Notes = ({ getNotes, note: { notes, loading } }) => {
+  useEffect(() => {
+    getNotes()
+  }, [getNotes])
 
 
-const Notes = ({ notes, setNotes, data }) => {
+  // const handleDelete = async (id) => {
+  //   await fetch('http://localhost:8000/note/' + id, {
+  //     method: 'DELETE'
+  //   })
 
+  //   const newNotes = notes.filter(note => note.id !== id);
+  //   setNotes(newNotes)
+  // };
 
-  const handleDelete = async (id) => {
-    await fetch('http://localhost:8000/note/' + id, {
-      method: 'DELETE'
-    })
-
-    const newNotes = notes.filter(note => note.id !== id);
-    setNotes(newNotes)
-  };
   const breakpoints = {
     default: 3,
     1100: 2,
@@ -30,9 +34,10 @@ const Notes = ({ notes, setNotes, data }) => {
         columnClassName="my-masonry-grid_column"
       >
         {
-          data.map(data => (
-            <div key={data.id}>
-              <NoteCard note={data} handleDelete={handleDelete} />
+          notes.map(note => (
+            <div key={note._id}>
+              {/* <NoteCard note={note} handleDelete={handleDelete} /> */}
+              <NoteCard note={note} />
             </div>
           ))
         }
@@ -43,8 +48,8 @@ const Notes = ({ notes, setNotes, data }) => {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.search.data
+    note: state.note
   }
 }
 
-export default connect(mapStateToProps)(Notes)
+export default connect(mapStateToProps, { getNotes })(Notes)

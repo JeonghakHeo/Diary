@@ -1,1 +1,0 @@
-export const SET_ALERT = 'UPDATE_SEARCH';

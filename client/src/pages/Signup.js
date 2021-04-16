@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Typography, Button, Container, FormControl } from '@material-ui/core';
 import { KeyboardArrowRight } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core';
@@ -13,6 +14,8 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import PersonIcon from '@material-ui/icons/Person';
 import EmailIcon from '@material-ui/icons/Email';
 import LockIcon from '@material-ui/icons/Lock';
+import { register } from '../actions/auth';
+import axios from 'axios';
 
 const useStyles = makeStyles({
   container: {
@@ -46,66 +49,78 @@ const useStyles = makeStyles({
 
 
 
-const Signup = () => {
+const Signup = ({ register, auth }) => {
   const classes = useStyles();
+  const history = useHistory();
 
   const [values, setValues] = useState({
     name: '',
     email: '',
-    password: '',
+    password1: '',
     password2: '',
     showPassword1: false,
     showPassword2: false,
   });
+
+  const { name, email, password1, password2, showPassword1, showPassword2 } = values;
 
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [password1Error, setPassword1Error] = useState(false);
   const [password2Error, setPassword2Error] = useState(false);
 
-  const history = useHistory();
+  // const [errors, setErros] = useState({
+  //   nameError: false,
+  //   emailError: false,
+  //   password1Error: false,
+  //   password2Error: false,
+  // })
+
+  // const { nameError, emailError, password1Error, password2Error } = errors;
+
 
   const handleChange = (prop) => (e) => {
     setValues({ ...values, [prop]: e.target.value });
   };
 
   const handleClickShowPassword1 = () => {
-    setValues({ ...values, showPassword1: !values.showPassword1 });
+    setValues({ ...values, showPassword1: !showPassword1 });
   };
 
   const handleClickShowPassword2 = () => {
-    setValues({ ...values, showPassword2: !values.showPassword2 });
+    setValues({ ...values, showPassword2: !showPassword2 });
   };
 
   const handleMouseDownPassword = (e) => {
     e.preventDefault();
   };
 
-  const onSubmit = e => {
+  const onSubmit = async e => {
     e.preventDefault();
     setNameError(false);
     setEmailError(false);
     setPassword1Error(false);
     setPassword2Error(false);
 
-    if (values.name == '') {
+    if (name == '') {
       setNameError(true)
     }
 
-    if (values.email == '') {
+    if (email == '') {
       setEmailError(true)
     }
 
-    if (values.password == '') {
+    if (password1 == '') {
       setPassword1Error(true)
     }
 
-    if (values.password2 == '') {
+    if (password2 == '') {
       setPassword2Error(true)
     }
 
-    if (values.name && values.email && values.password && values.password2) {
-      history.push('/note')
+    if (name && email && password1 && password2) {
+      console.log(values)
+      register({ name, email, password1 })
     }
   }
 
@@ -124,17 +139,17 @@ const Signup = () => {
         className={classes.title}
         variant='h4'
         component='h2'
-        color='default'
+        color='initial'
         gutterBottom
       >
         Create your account
       </Typography>
 
-      <form noValidate autoComplete='off' onSubmit={onSubmit}>
+      <form noValidate autoComplete='off' onSubmit={e => onSubmit(e)}>
         <FormControl className={classes.form} fullWidth variant='outlined'>
           <InputLabel className={classes.label} required><PersonIcon className={classes.icon} fontSize='small' />Name</InputLabel>
           <OutlinedInput
-            value={values.name}
+            value={name}
             error={nameError}
             onChange={handleChange('name')}
             labelWidth={78}
@@ -145,7 +160,7 @@ const Signup = () => {
         <FormControl className={classes.form} fullWidth variant='outlined'>
           <InputLabel className={classes.label} required><EmailIcon className={classes.icon} fontSize='small' />Email</InputLabel>
           <OutlinedInput
-            value={values.email}
+            value={email}
             error={emailError}
             onChange={handleChange('email')}
             labelWidth={75}
@@ -156,10 +171,10 @@ const Signup = () => {
         <FormControl className={classes.form} fullWidth variant='outlined'>
           <InputLabel className={classes.label} required><LockIcon className={classes.icon} fontSize='small' />Password</InputLabel>
           <OutlinedInput
-            type={values.showPassword1 ? 'text' : 'password'}
-            value={values.password}
+            type={showPassword1 ? 'text' : 'password'}
+            value={password1}
             error={password1Error}
-            onChange={handleChange('password')}
+            onChange={handleChange('password1')}
             endAdornment={
               <InputAdornment position='end'>
                 <IconButton
@@ -167,20 +182,23 @@ const Signup = () => {
                   onMouseDown={handleMouseDownPassword}
                   edge='end'
                 >
-                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                  {showPassword1 ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>
             }
             labelWidth={105}
           />
           {password1Error ? <FormHelperText>Password is required</FormHelperText> : null}
+          {/* TODO:
+              conditional render when passwords not match
+          */}
         </FormControl>
 
         <FormControl className={classes.form} fullWidth variant='outlined'>
           <InputLabel className={classes.label} required><LockIcon className={classes.icon} fontSize='small' />Confirm password</InputLabel>
           <OutlinedInput
-            type={values.showPassword2 ? 'text' : 'password'}
-            value={values.password2}
+            type={showPassword2 ? 'text' : 'password'}
+            value={password2}
             error={password2Error}
             onChange={handleChange('password2')}
             endAdornment={
@@ -190,19 +208,21 @@ const Signup = () => {
                   onMouseDown={handleMouseDownPassword}
                   edge='end'
                 >
-                  {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                  {showPassword2 ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>
             }
             labelWidth={170}
           />
           {password2Error ? <FormHelperText>Password is required</FormHelperText> : null}
+          {/* TODO:
+              conditional render when passwords not match
+          */}
         </FormControl>
 
         <Button
           className={classes.button}
           // disabled
-          onClick={() => console.log('You clicked me')}
           type='submit'
           color='primary'
           variant='contained'
@@ -215,4 +235,8 @@ const Signup = () => {
   )
 }
 
-export default Signup
+const mapStateToProps = (state) => ({
+  auth: state.auth
+})
+
+export default connect(mapStateToProps, { register })(Signup)
