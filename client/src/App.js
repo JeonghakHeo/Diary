@@ -10,6 +10,8 @@ import { Provider } from 'react-redux'
 import store from './store'
 import Routes from './components/routing/Routes'
 import Signup from './pages/Signup'
+import setAuthToken from './utils/setAuthToken'
+import { loadUser } from './actions/auth'
 
 const theme = createMuiTheme({
   typography: {
@@ -21,16 +23,13 @@ const theme = createMuiTheme({
   }
 })
 
+// if (localStorage.token) {
+//   setAuthToken(localStorage.token)
+// }
+
 function App() {
-  // const [notes, setNotes] = useState([]);
-
-
   // useEffect(() => {
-  //   fetch('http://localhost:8000/note')
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       setNotes(data)
-  //     })
+  //   store.dispatch(loadUser())
   // }, [])
 
   return (

@@ -9,13 +9,13 @@ export const Routes = () => {
   const [notes, setNotes] = useState([]);
 
 
-  useEffect(() => {
-    fetch('http://localhost:8000/note')
-      .then(res => res.json())
-      .then(data => {
-        setNotes(data)
-      })
-  }, [])
+  // useEffect(() => {
+  //   fetch('http://localhost:8000/note')
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       setNotes(data)
+  //     })
+  // }, [])
 
   return (
     <>

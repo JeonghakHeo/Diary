@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Container } from '@material-ui/core';
-import NoteCard from '../components/NoteCard';
+import NoteCard from './NoteCard';
 import Masonry from 'react-masonry-css';
 import { connect } from 'react-redux';
 import { getNotes } from '../actions/note';

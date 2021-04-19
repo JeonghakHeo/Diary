@@ -5,14 +5,15 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const User = require('../../models/User');
+const auth = require('../../middleware/auth');
 
 // @route   POST api/auth
-// @desc    Authenticate user & get token
+// @desc    Authenticate(Login) user & get token
 // @access  Public 
 router.post('/',
   [
     body('email', 'Enter a valid email').isEmail(),
-    body('password', 'Password is required').not().isEmpty()
+    body('password', 'Password is required').exists()
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -55,4 +56,18 @@ router.post('/',
     }
   })
 
+
+// @route   GET api/auth
+// @desc    Get authenticated user
+// @access  Public 
+router.get('/', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    res.json(user);
+  }
+  catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error')
+  }
+});
 module.exports = router;

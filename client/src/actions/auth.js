@@ -1,7 +1,64 @@
 import axios from 'axios';
-import { REGISTER_SUCCESS, REGISTER_FAIL } from './types';
+import {
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  USER_LOADED,
+  AUTH_ERROR
+} from './types';
+import setAuthToken from '../utils/setAuthToken';
 
-// register
+// export const loadUser = async () => {
+//   if (localStorage.token) {
+//     setAuthToken(token)
+//   }
+
+//   try {
+//     const res = await axios.get('/api/auth');
+
+//     dispatch({
+//       type: USER_LOADED,
+//       payload: res.data
+//     });
+//   }
+//   catch (error) {
+//     dispatch({
+//       type: AUTH_ERROR
+//     });
+//   }
+// };
+
+// // Login
+// export const login = ({ email, password }) => async dispatch => {
+
+//   const config = {
+//     headers: {
+//       'Content-Type': 'application/json'
+//     }
+//   };
+
+//   const body = JSON.stringify({ email, password });
+
+//   try {
+//     const res = await axios.post('/api/auth', body, config);
+
+//     dispatch({
+//       type: LOGIN_SUCCESS,
+//       payload: res.data
+//     });
+
+//     dispatch(loadUser());
+//   } catch (err) {
+//     const errors = err.response.data.error;
+
+//     dispatch({
+//       type: LOGIN_FAIL
+//     })
+//   };
+// };
+
+// Register
 export const register = ({ name, email, password }) => async dispatch => {
 
   const config = {
@@ -13,7 +70,7 @@ export const register = ({ name, email, password }) => async dispatch => {
   const body = JSON.stringify({ name, email, password });
 
   try {
-    const res = await axios.post('/', body, config);
+    const res = await axios.post('/api/users', body, config);
 
     dispatch({
       type: REGISTER_SUCCESS,
@@ -29,5 +86,5 @@ export const register = ({ name, email, password }) => async dispatch => {
       type: REGISTER_FAIL
     })
   }
-
 }
+
