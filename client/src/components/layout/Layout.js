@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, Link } from 'react-router-dom';
 import { fade, makeStyles, Drawer, Typography } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -15,7 +15,6 @@ import { format } from 'date-fns';
 
 
 import { connect } from 'react-redux';
-import search from '../../reducers/search';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => {
@@ -97,7 +96,7 @@ const useStyles = makeStyles((theme) => {
 )
 
 
-const Layout = ({ children, data }) => {
+const Layout = ({ children, data, user, loading }) => {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
@@ -160,11 +159,11 @@ const Layout = ({ children, data }) => {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
-
-          <Typography>
+          {!loading ? (<Typography>
             {(hours < 12) ? "Good Morning" :
-              ((hours >= 12 && hours <= 18) ? "Good Afternoon" : " Good Evening")} Jeonghak!
-          </Typography>
+              ((hours >= 12 && hours <= 18) ? "Good Afternoon" : " Good Evening")} {user.name[0].toUpperCase() + user.name.slice(1, user.name.length)}!
+          </Typography>) : ('')}
+
           <Avatar src='/images/me.jpg' className={classes.avatar} />
         </ToolBar>
       </AppBar>
@@ -178,9 +177,11 @@ const Layout = ({ children, data }) => {
         anchor='left'
         variant='permanent'>
         <div>
-          <Typography className={classes.title} variant='h5'>
-            Diary
+          <Link to='/' style={{ textDecoration: 'none', color: 'black' }}>
+            <Typography className={classes.title} variant='h5'>
+              Diary
           </Typography>
+          </Link>
         </div>
 
         {/* List */}
@@ -210,7 +211,9 @@ const Layout = ({ children, data }) => {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.search.data
+    data: state.search.data,
+    user: state.auth.user,
+    loading: state.auth.loading
   }
 }
 

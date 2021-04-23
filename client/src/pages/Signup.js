@@ -39,7 +39,7 @@ const useStyles = makeStyles({
     alignItems: 'center'
   },
   icon: {
-    marginRight: 5
+    marginRight: 3
   },
   button: {
     marginTop: 20

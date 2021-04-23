@@ -12,7 +12,7 @@ const auth = require('../../middleware/auth');
 // @access  Public 
 router.post('/',
   [
-    body('email', 'Enter a valid email').isEmail(),
+    body('email', 'Enter a valid email address').isEmail(),
     body('password', 'Password is required').exists()
   ],
   async (req, res) => {
@@ -34,7 +34,7 @@ router.post('/',
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] })
+        return res.status(400).json({ errors: [{ msg: 'Wrong password. Try again or click Forgot password to reset it.' }] })
       }
 
       const payload = {

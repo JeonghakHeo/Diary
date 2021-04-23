@@ -1,9 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import Notes from './pages/Notes'
-import Create from './pages/Create'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core'
-import Layout from './components/layout/Layout'
 import Landing from './components/layout/Landing'
 import NotFound from './components/layout/NotFound'
 import { Provider } from 'react-redux'
@@ -23,14 +20,14 @@ const theme = createMuiTheme({
   }
 })
 
-// if (localStorage.token) {
-//   setAuthToken(localStorage.token)
-// }
+if (localStorage.token) {
+  setAuthToken(localStorage.token)
+}
 
 function App() {
-  // useEffect(() => {
-  //   store.dispatch(loadUser())
-  // }, [])
+  useEffect(() => {
+    store.dispatch(loadUser())
+  }, [])
 
   return (
     <Provider store={store}>

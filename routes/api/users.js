@@ -12,7 +12,7 @@ const config = require('config');
 router.post('/',
   [
     body('name', 'Name is required').not().isEmpty(),
-    body('email', 'Please enter a valid email').isEmail(),
+    body('email', 'Please enter a valid email address').isEmail(),
     body('password', 'Passwords must be at least 6 characters long').isLength({ min: 6 })
   ],
   async (req, res) => {
