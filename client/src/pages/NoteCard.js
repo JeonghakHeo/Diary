@@ -15,6 +15,8 @@ import Fade from '@material-ui/core/Fade';
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
 import CloseIcon from '@material-ui/icons/Close';
 import StarBorderRoundedIcon from '@material-ui/icons/StarBorderRounded';
+import { connect } from 'react-redux';
+import { deleteNote } from '../actions/note';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -83,7 +85,7 @@ const useStyles = makeStyles((theme) => {
   }
 })
 
-const NoteCard = ({ note, handleDelete }) => {
+const NoteCard = ({ note, deleteNote }) => {
   const classes = useStyles(note);
   const [open, setOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -142,7 +144,7 @@ const NoteCard = ({ note, handleDelete }) => {
                     <Typography variant='h5' component='h2' id='transition-modal-title'>Are you sure?</Typography>
                     <Typography component='p' fontSize='1rem' gutterBottom color='textSecondary'>If you delete it, you can't recover it.</Typography>
                     <Button className={classes.margin} variant='contained' color='default' onClick={handleClose}>Cancel</Button>
-                    <Button className={classes.margin} variant='contained' color='secondary' onClick={() => handleDelete(note.id)}>Delete</Button>
+                    <Button className={classes.margin} variant='contained' color='secondary' onClick={() => deleteNote(note._id)}>Delete</Button>
                   </div>
                 </Fade>
               </Modal>
@@ -173,4 +175,6 @@ const NoteCard = ({ note, handleDelete }) => {
   )
 }
 
-export default NoteCard
+
+export default connect(null, { deleteNote })(NoteCard)
+

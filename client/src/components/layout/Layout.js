@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useHistory, useLocation, Link } from 'react-router-dom';
-import { fade, makeStyles, Drawer, Typography } from '@material-ui/core';
+import { logout } from '../../actions/auth'
+import { fade, makeStyles, Drawer, Typography, Button } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -11,10 +12,13 @@ import { AddCircleOutlined, SubjectOutlined } from '@material-ui/icons';
 import AppBar from '@material-ui/core/AppBar';
 import ToolBar from '@material-ui/core/Toolbar';
 import Avatar from '@material-ui/core/Avatar';
+import Popover from '@material-ui/core/Popover';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Grid from '@material-ui/core/Grid';
 import { format } from 'date-fns';
 
-
 import { connect } from 'react-redux';
+import { search } from '../../actions/search';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => {
@@ -50,8 +54,14 @@ const useStyles = makeStyles((theme) => {
       flexGrow: 1
     },
     avatar: {
-      marginLeft: theme.spacing(2)
+      marginRight: theme.spacing(2),
+      marginLeft: theme.spacing(2),
+      '&:hover': {
+        cursor: 'pointer'
+      }
     },
+
+    // ** Search Tab ** //
     search: {
       position: 'relative',
       borderRadius: theme.shape.borderRadius,
@@ -90,13 +100,54 @@ const useStyles = makeStyles((theme) => {
           width: '20ch',
         },
       },
+    },
+
+    // ** Popover ** //
+    button: {
+      '&:hover': {
+        backgroundColor: 'transparent',
+        color: '#007791'
+      }
+    },
+    dropdown: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    exitIcon: {
+      marginRight: '5px'
+    },
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      alignContent: 'flex-start',
+      padding: '10px 20px'
+    },
+    typography: {
+      '&:hover': {
+        color: '#007791'
+      }
+    },
+    gridContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      textAlign: 'left',
+      borderBottom: '1px solid #eee',
+      marginBottom: '10px',
+      '&:hover': {
+        cursor: 'pointer'
+      }
+    },
+    avatarLarge: {
+      width: theme.spacing(7),
+      height: theme.spacing(7)
     }
   }
 }
 )
 
 
-const Layout = ({ children, data, user, loading }) => {
+const Layout = ({ children, notes, user, loading, logout, search }) => {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
@@ -106,24 +157,26 @@ const Layout = ({ children, data, user, loading }) => {
 
 
   const [searchValue, setSearchValue] = useState('');
-  const [notes, setNewNotes] = useState([]);
+  const [data, setNewNotes] = useState([]);
 
   const handleSearch = (e) => {
-    setSearchValue(e.target.value.toLowerCase())
-    const newData = data.filter(note => {
-      if (e.target.value === '') return false
-      return note.title.indexOf(e.target.value.toLowerCase()) !== -1
+    const searchValue = e.target.value;
+    setSearchValue(searchValue.toLowerCase())
+
+    const newNotes = notes.filter(note => {
+      if (searchValue === '') return true
+      return note.title.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1
     })
 
-    setNewNotes(newData);
-    console.log(newData)
+    console.log(newNotes)
+    search(newNotes)
   }
 
   const menuItems = [
     {
       title: 'My notes',
       icon: <SubjectOutlined color='primary' />,
-      path: '/note'
+      path: '/notes'
     },
     {
       title: 'Create',
@@ -133,7 +186,20 @@ const Layout = ({ children, data, user, loading }) => {
 
   ];
 
-  return (
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
+  return loading ? ('') : (
     <div className={classes.root}>
 
       {/* App bar */}
@@ -164,7 +230,53 @@ const Layout = ({ children, data, user, loading }) => {
               ((hours >= 12 && hours <= 18) ? "Good Afternoon" : " Good Evening")} {user.name[0].toUpperCase() + user.name.slice(1, user.name.length)}!
           </Typography>) : ('')}
 
-          <Avatar src='/images/me.jpg' className={classes.avatar} />
+          {/* Popover */}
+          <Avatar src='/images/me.jpg' className={classes.avatar} onClick={handleClick} />
+          <Popover
+            id={id}
+            open={open}
+            className={classes.popover}
+            anchorEl={anchorEl}
+            anchorReference='anchorPosition'
+            anchorPosition={{ top: 75, left: 1400 }}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+          >
+            <div className={classes.container}>
+              <div>
+                <Grid container spacing={2} className={classes.gridContainer}>
+                  <Grid item>
+                    <Avatar src='/images/me.jpg' className={classes.avatarLarge} />
+                  </Grid>
+                  <Grid item>
+                    <Typography className={classes.typography} variant='h6'>{user.name}</Typography>
+                    <Typography>{user.email}</Typography>
+                  </Grid>
+                  {/* <Button className={classes.button}>
+                  <div className={classes.dropdown}>
+                  </div>
+                </Button> */}
+                </Grid>
+              </div>
+
+              <div>
+                <Button className={classes.button}>
+                  <div className={classes.dropdown} onClick={logout}>
+                    <ExitToAppIcon fontSize='small' className={classes.exitIcon} />
+                    <Typography>Logout</Typography>
+                  </div>
+                </Button>
+              </div>
+            </div>
+
+          </Popover>
         </ToolBar>
       </AppBar>
 
@@ -205,16 +317,16 @@ const Layout = ({ children, data, user, loading }) => {
         <div className={classes.toolbar}></div>
         {children}
       </div>
-    </div>
+    </div >
   )
 }
 
 const mapStateToProps = (state) => {
   return {
-    data: state.search.data,
+    notes: state.note.notes,
     user: state.auth.user,
     loading: state.auth.loading
   }
 }
 
-export default connect(mapStateToProps)(Layout)
+export default connect(mapStateToProps, { logout, search })(Layout)

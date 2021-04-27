@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { connect } from 'react-redux';
+import { createNote } from '../actions/note'
 import { useHistory } from 'react-router-dom';
 import { Typography, Button, Container, FormControlLabel, FormLabel, FormControl } from '@material-ui/core';
 import { Radio, RadioGroup } from '@material-ui/core';
@@ -16,7 +18,7 @@ const useStyles = makeStyles({
 
 
 
-export default function Create() {
+const Create = ({ createNote, loading }) => {
   const classes = useStyles();
   const [title, setTitle] = useState('');
   const [details, setDetails] = useState('');
@@ -38,15 +40,12 @@ export default function Create() {
       setDetailsError(true)
     }
 
-    if (title && details) {
-      fetch('http://localhost:8000/note', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, details, category })
-      })
-        .then(() => {
-          history.push('/')
-        })
+    if (title && details && category) {
+      createNote({ title, details, category })
+    }
+
+    if (!loading) {
+      history.push('/notes')
     }
   }
 
@@ -82,7 +81,7 @@ export default function Create() {
           variant='outlined'
           fullWidth
           multiline
-          row={4}
+          rows={4}
           error={detailsError}
           required
         />
@@ -98,7 +97,7 @@ export default function Create() {
         </FormControl>
         <Button
           className={classes.btn}
-          onClick={() => console.log('You clicked me')}
+          onSubmit={e => onSubmit(e)}
           type='submit'
           color='primary'
           variant='contained'
@@ -110,3 +109,10 @@ export default function Create() {
     </Container>
   )
 }
+
+const mapStateToProps = state => ({
+  loading: state.note.loading
+})
+
+export default connect(mapStateToProps, { createNote })(Create)
+

@@ -11,7 +11,7 @@ export const Routes = () => {
       <Switch>
         <PrivateRoute>
           <Layout>
-            <PrivateRoute exact path='/note' component={Notes} />
+            <PrivateRoute exact path='/notes' component={Notes} />
             <PrivateRoute exact path='/create' component={Create} />
           </Layout>
         </PrivateRoute>

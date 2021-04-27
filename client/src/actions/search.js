@@ -1,5 +1,9 @@
 import { UPDATE_SEARCH } from './types';
 
-export const search = () => dispatch => {
-  dispatch({ type: UPDATE_SEARCH })
+export const search = (newNotes) => async dispatch => {
+
+  dispatch({
+    type: UPDATE_SEARCH,
+    payload: newNotes
+  })
 }

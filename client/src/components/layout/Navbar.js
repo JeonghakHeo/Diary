@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
@@ -100,6 +100,13 @@ const useStyles = makeStyles((theme) => ({
   error: {
     marginLeft: '3px',
     fontSize: '13px'
+  },
+  errorCancelIcon: {
+    marginTop: '3px',
+  },
+  errorHelperText: {
+    marginLeft: '3px',
+    fontSize: '13px'
   }
 }));
 
@@ -141,14 +148,33 @@ const Navbar = ({ login, logout, isAuthenticated, loading, errors }) => {
   const onSubmit = async e => {
     e.preventDefault();
 
+    if (email == '') {
+      setEmailError(true)
+
+      setTimeout(() => {
+        setEmailError(false)
+      }, 3000)
+    }
+
+    if (password == '') {
+      setPasswordError(true)
+
+      setTimeout(() => {
+        setPasswordError(false)
+      }, 3000)
+    }
     if (email && password) {
       login({ email, password })
     }
+  }
 
-    if (isAuthenticated) {
-      setOpen(false)
-      return <Redirect to='/note' />
-    }
+  if (isAuthenticated) {
+    // setOpen(false)
+    // console.log(isAuthenticated)
+    setTimeout(() => {
+      return <Redirect to='/notes' />
+    }, 1000)
+    // return <Redirect to='/notes' />
   }
 
 
@@ -203,7 +229,12 @@ const Navbar = ({ login, logout, isAuthenticated, loading, errors }) => {
                                 onChange={handleChange('email')}
                                 labelWidth={75}
                               />
-                              {emailError ? <FormHelperText>Name is required</FormHelperText> : null}
+                              {emailError ?
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <CancelIcon color='secondary' fontSize='small' className={classes.errorCancelIcon} />
+                                  <FormHelperText className={classes.errorHelperText}><Typography color='secondary' style={{ fontSize: '13px' }}>Email is required</Typography></FormHelperText>
+                                </div> :
+                                null}
                             </FormControl>
 
                             <FormControl className={classes.form} variant='outlined' fullWidth>
@@ -226,7 +257,12 @@ const Navbar = ({ login, logout, isAuthenticated, loading, errors }) => {
                                   </InputAdornment>
                                 }
                               />
-                              {emailError ? <FormHelperText>Email is required</FormHelperText> : null}
+                              {passwordError ?
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                  <CancelIcon color='secondary' fontSize='small' className={classes.errorCancelIcon} />
+                                  <FormHelperText className={classes.errorHelperText}><Typography color='secondary' style={{ fontSize: '13px' }}>Password is required</Typography></FormHelperText>
+                                </div>
+                                : null}
                             </FormControl>
                             {
                               errors.map(error => (
@@ -256,7 +292,7 @@ const Navbar = ({ login, logout, isAuthenticated, loading, errors }) => {
               <>
                 <Link to='/'><Button>Home</Button></Link>
                 <Link to='#'><Button>Features</Button></Link>
-                <Link to='/note'><Button>Notes</Button></Link>
+                <Link to='/notes'><Button>Notes</Button></Link>
                 <Button onClick={handleLogout}>Logout</Button>
               </>
             )}</>)}
