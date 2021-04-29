@@ -269,8 +269,8 @@ const Layout = ({ children, notes, user, loading, logout, search }) => {
               <div>
                 <Button className={classes.button}>
                   <div className={classes.dropdown} onClick={logout}>
-                    <ExitToAppIcon fontSize='small' className={classes.exitIcon} />
-                    <Typography>Logout</Typography>
+                    <ExitToAppIcon fontSize='small' className={classes.exitIcon} onClick={logout} />
+                    <Typography onClick={logout}>Logout</Typography>
                   </div>
                 </Button>
               </div>

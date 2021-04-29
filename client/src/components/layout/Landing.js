@@ -12,7 +12,6 @@ const Landing = ({ isAuthenticated, loading, user }) => {
         <div className='landing container'>
           <img src='/images/welcome.png' className='landing-image' />
           <div>
-            {/* <Typography variant='h2' component='h1' gutterBottom>Welcome to Diary!</Typography> */}
             {isAuthenticated && !loading ?
               (<Typography variant='h2' component='h1' gutterBottom>Welcome back {user.name}!</Typography>) :
               (<Typography variant='h2' component='h1' gutterBottom>Welcome to Diary!</Typography>)}

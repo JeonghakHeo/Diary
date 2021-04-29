@@ -17,7 +17,25 @@ const Notes = ({ getCurrentUsersNotes, note: { notes, loading }, searchedNotes }
     700: 1
   }
 
-  return loading && notes === null ? ('waiting') :
+
+  return !loading && notes.length !== 0 && searchedNotes.length == 0 ?
+    (
+      <Container>
+        <Masonry
+          breakpointCols={breakpoints}
+          className="my-masonry-grid"
+          columnClassName="my-masonry-grid_column"
+        >
+          {
+            notes.map(note => (
+              <div key={note._id}>
+                <NoteCard note={note} />
+              </div>
+            ))
+          }
+        </Masonry>
+      </Container>
+    ) :
     (
       <Container>
         <Masonry
@@ -33,8 +51,7 @@ const Notes = ({ getCurrentUsersNotes, note: { notes, loading }, searchedNotes }
             ))
           }
         </Masonry>
-      </Container>
-    )
+      </Container>)
 }
 
 const mapStateToProps = (state) => {

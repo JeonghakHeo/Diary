@@ -48,7 +48,7 @@ const useStyles = makeStyles({
 
 
 
-const Signup = ({ register, auth, isAuthenticated }) => {
+const Signup = ({ register, loading, isAuthenticated }) => {
   const classes = useStyles();
 
   const [values, setValues] = useState({
@@ -114,8 +114,8 @@ const Signup = ({ register, auth, isAuthenticated }) => {
     }
   }
 
-  if (isAuthenticated) {
-    return <Redirect to='/note' />
+  if (isAuthenticated && !loading) {
+    return <Redirect to='/notes' />
   }
 
   return (
@@ -230,7 +230,7 @@ const Signup = ({ register, auth, isAuthenticated }) => {
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth,
+  loading: state.auth.loading,
   isAuthenticated: state.auth.isAuthenticated
 })
 
