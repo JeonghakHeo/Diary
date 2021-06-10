@@ -83,11 +83,12 @@ export const register = ({ name, email, password }) => async dispatch => {
       payload: res.data
     })
   } catch (err) {
-
-    // TODO: error handle
     const errors = err.response.data.errors;
     console.log(errors);
 
+    if (errors) {
+      errors.forEach(error => dispatch(setError(error.msg)));
+    }
     dispatch({
       type: REGISTER_FAIL
     })

@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core';
+import { withStyles, makeStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -8,27 +8,49 @@ import CardActions from '@material-ui/core/CardActions'
 import Button from '@material-ui/core/Button'
 import { Avatar, IconButton, Typography } from '@material-ui/core';
 import { DeleteOutlined } from '@material-ui/icons';
-import { amber, blue, green, pink, yellow } from '@material-ui/core/colors';
+import { amber, blue, green, pink, yellow, grey } from '@material-ui/core/colors';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
 import CloseIcon from '@material-ui/icons/Close';
+import StarRoundedIcon from '@material-ui/icons/StarRounded';
 import StarBorderRoundedIcon from '@material-ui/icons/StarBorderRounded';
 import { connect } from 'react-redux';
 import { deleteNote } from '../actions/note';
+import { makeFavorite } from '../actions/note';
+import { makeUnfavorite } from '../actions/note';
+import Tooltip from '@material-ui/core/Tooltip';
+import Zoom from '@material-ui/core/Zoom';
 
 const useStyles = makeStyles((theme) => {
   return {
-    card: {
-      height: '320px',
-      width: '360px'
-    },
     test: {
       border: (note) => {
-        if (note.category === 'reminders')
-          return '1px solid red'
-      }
+        if (note.favorite == true && note.category === 'work') {
+          return '1px solid #fbc02d'
+        } else if (note.favorite == false && note.category === 'work') {
+          return 'none'
+        }
+
+        if (note.favorite == true && note.category === 'todos') {
+          return '1px solid #4caf50'
+        } else if (note.favorite == false && note.category === 'todos') {
+          return 'none'
+        }
+
+        if (note.favorite == true && note.category === 'reminders') {
+          return '1px solid #e91e63'
+        } else if (note.favorite == false && note.category === 'reminders') {
+          return 'none'
+        }
+
+        if (note.favorite == true && note.category === 'money') {
+          return '1px solid #2196f3'
+        } else if (note.favorite == false && note.category === 'money') {
+          return 'none'
+        }
+      },
     },
     avatar: {
       backgroundColor: (note) => {
@@ -79,17 +101,32 @@ const useStyles = makeStyles((theme) => {
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1)
     },
+    bin: {
+      '&:hover': {
+        background: 'white',
+        color: grey[800]
+      }
+    },
     favorite: {
-      color: yellow[500]
+      '&:hover': {
+        background: 'white',
+        color: yellow[600]
+      }
     }
   }
 })
 
-const NoteCard = ({ note, deleteNote }) => {
+const CustomTooltip = withStyles((theme) => ({
+  tooltip: {
+    fontSize: 11,
+    marginTop: 3
+  },
+}))(Tooltip);
+
+const NoteCard = ({ note, note: { _id }, deleteNote, makeFavorite, makeUnfavorite }) => {
+
   const classes = useStyles(note);
   const [open, setOpen] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
-
 
   const handleOpen = () => {
     setOpen(true);
@@ -100,29 +137,29 @@ const NoteCard = ({ note, deleteNote }) => {
   };
 
   const handleFavorite = () => {
-
-    if (isFavorite) {
-      setIsFavorite(false)
-
-    } else {
-      setIsFavorite(true)
-      // change color
+    if (note.favorite === false) {
+      makeFavorite(_id)
     }
 
+    if (note.favorite === true) {
+      makeUnfavorite(_id)
+    }
   }
 
   return (
     <div>
-      <Card className={classes.card, classes.test} elevation={1}>
+      <Card className={classes.test} elevation={1}>
         <CardHeader
           avatar={
             <Avatar className={classes.avatar}>{note.category[0].toUpperCase()}</Avatar>
           }
           action={
             <>
-              <IconButton onClick={handleOpen}>
-                <DeleteOutlined />
-              </IconButton>
+              <CustomTooltip title="Delete" TransitionComponent={Zoom} arrow>
+                <IconButton onClick={handleOpen} className={classes.bin}>
+                  <DeleteOutlined />
+                </IconButton>
+              </CustomTooltip>
               <Modal
                 aria-labelledby='transition-modal-title'
                 aria-describedby='transition-modal-description'
@@ -161,14 +198,16 @@ const NoteCard = ({ note, deleteNote }) => {
         </CardContent>
 
         <CardActions>
-          <Link to='/create'>
+          <Link to={`/edit/${_id}`}>
             <Button size='small' variant='outlined' color='primary'>
               Edit
             </Button>
           </Link>
-          <IconButton onClick={handleFavorite} >
-            <StarBorderRoundedIcon />
-          </IconButton>
+          <CustomTooltip title={note.favorite == true ? 'Unfavorite' : 'Favorite'} TransitionComponent={Zoom} arrow>
+            <IconButton onClick={handleFavorite} className={classes.favorite}>
+              {note.favorite == true ? <StarRoundedIcon style={{ color: yellow[600] }} /> : <StarBorderRoundedIcon />}
+            </IconButton>
+          </CustomTooltip>
         </CardActions>
       </Card>
     </div>
@@ -176,5 +215,5 @@ const NoteCard = ({ note, deleteNote }) => {
 }
 
 
-export default connect(null, { deleteNote })(NoteCard)
+export default connect(null, { deleteNote, makeFavorite, makeUnfavorite })(NoteCard)
 

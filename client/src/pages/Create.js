@@ -103,7 +103,7 @@ const Create = ({ createNote, loading }) => {
           variant='contained'
           endIcon={<KeyboardArrowRight />}
         >
-          Submit
+          Create
       </Button>
       </form>
     </Container>

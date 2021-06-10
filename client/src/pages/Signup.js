@@ -14,16 +14,17 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import PersonIcon from '@material-ui/icons/Person';
 import EmailIcon from '@material-ui/icons/Email';
 import LockIcon from '@material-ui/icons/Lock';
-import { register } from '../actions/auth';
+import CustomError from '../customized/CustomError';
+import { loadUser, register } from '../actions/auth';
+import snackbar from '../actions/snackbar';
+import setError from '../reducers/error';
+
 
 const useStyles = makeStyles({
   container: {
     textAlign: 'center',
     width: 700,
     marginTop: 30
-  },
-  title: {
-    // margin: '20px 0'
   },
   field: {
     marginTop: 20,
@@ -48,7 +49,7 @@ const useStyles = makeStyles({
 
 
 
-const Signup = ({ register, loading, isAuthenticated }) => {
+const Signup = ({ register, loadUser, loading, isAuthenticated, errors, setError }) => {
   const classes = useStyles();
 
   const [values, setValues] = useState({
@@ -63,9 +64,10 @@ const Signup = ({ register, loading, isAuthenticated }) => {
   const { name, email, password, password2, showpassword, showPassword2 } = values;
 
   const [nameError, setNameError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setpasswordError] = useState(false);
+  const [emailError, setEmailError] = useState(false);;
+  const [passwordError, setPasswordError] = useState(false);
   const [password2Error, setPassword2Error] = useState(false);
+  const [isMatch, setIsMatch] = useState(null);
 
   const handleChange = (prop) => (e) => {
     setValues({ ...values, [prop]: e.target.value });
@@ -87,7 +89,7 @@ const Signup = ({ register, loading, isAuthenticated }) => {
     e.preventDefault();
     setNameError(false);
     setEmailError(false);
-    setpasswordError(false);
+    setPasswordError(false);
     setPassword2Error(false);
 
     if (name == '') {
@@ -99,7 +101,7 @@ const Signup = ({ register, loading, isAuthenticated }) => {
     }
 
     if (password == '') {
-      setpasswordError(true)
+      setPasswordError(true)
     }
 
     if (password2 == '') {
@@ -107,15 +109,17 @@ const Signup = ({ register, loading, isAuthenticated }) => {
     }
 
     if (password !== password2) {
-      console.log(values)
-      // TODO: error handle
+      // snackbar(true, 'error', 'error occured')
     } else {
       register({ name, email, password })
     }
   }
 
+
+
   if (isAuthenticated && !loading) {
-    return <Redirect to='/notes' />
+    loadUser();
+    return <Redirect to='/' />
   }
 
   return (
@@ -130,7 +134,6 @@ const Signup = ({ register, loading, isAuthenticated }) => {
       </Typography>
 
       <Typography
-        className={classes.title}
         variant='h4'
         component='h2'
         color='initial'
@@ -138,7 +141,7 @@ const Signup = ({ register, loading, isAuthenticated }) => {
       >
         Create your account
       </Typography>
-
+      {/* { errors.length !== 0 ? snackbar(true, 'error', 'error occured') : null} */}
       <form noValidate autoComplete='off' onSubmit={e => onSubmit(e)}>
         <FormControl className={classes.form} fullWidth variant='outlined'>
           <InputLabel className={classes.label} required><PersonIcon className={classes.icon} fontSize='small' />Name</InputLabel>
@@ -148,7 +151,8 @@ const Signup = ({ register, loading, isAuthenticated }) => {
             onChange={handleChange('name')}
             labelWidth={78}
           />
-          {nameError ? <FormHelperText>Name is required</FormHelperText> : null}
+          {/* {nameError ? <FormHelperText>Name is required *</FormHelperText> : null} */}
+          {!nameError && errors ? <CustomError errors={errors} /> : null}
         </FormControl>
 
         <FormControl className={classes.form} fullWidth variant='outlined'>
@@ -159,7 +163,8 @@ const Signup = ({ register, loading, isAuthenticated }) => {
             onChange={handleChange('email')}
             labelWidth={75}
           />
-          {emailError ? <FormHelperText>Email is required</FormHelperText> : null}
+          {emailError ? <FormHelperText>Email is required *</FormHelperText> : null}
+          {!emailError && errors ? <CustomError errors={errors} /> : null}
         </FormControl>
 
         <FormControl className={classes.form} fullWidth variant='outlined'>
@@ -182,10 +187,8 @@ const Signup = ({ register, loading, isAuthenticated }) => {
             }
             labelWidth={105}
           />
-          {passwordError ? <FormHelperText>Password is required</FormHelperText> : null}
-          {/* TODO:
-              conditional render when passwords not match
-          */}
+          {passwordError ? <FormHelperText>Password is required *</FormHelperText> : null}
+          {/* {!passwordError && errors ? <CustomError errors={errors} /> : null} */}
         </FormControl>
 
         <FormControl className={classes.form} fullWidth variant='outlined'>
@@ -208,15 +211,13 @@ const Signup = ({ register, loading, isAuthenticated }) => {
             }
             labelWidth={170}
           />
-          {password2Error ? <FormHelperText>Password is required</FormHelperText> : null}
-          {/* TODO:
-              conditional render when passwords not match
-          */}
+          {password2Error ? <FormHelperText>Password is required *</FormHelperText> :
+            password2.length !== 0 && password !== password2 ? <FormHelperText>Passwords not match</FormHelperText> :
+              password.length !== 0 && password2.length !== 0 && password === password2 ? <FormHelperText>Passwords match !</FormHelperText> : null}
         </FormControl>
 
         <Button
           className={classes.button}
-          // disabled
           type='submit'
           color='primary'
           variant='contained'
@@ -231,7 +232,8 @@ const Signup = ({ register, loading, isAuthenticated }) => {
 
 const mapStateToProps = (state) => ({
   loading: state.auth.loading,
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  errors: state.error
 })
 
-export default connect(mapStateToProps, { register })(Signup)
+export default connect(mapStateToProps, { register, loadUser, setError })(Signup)

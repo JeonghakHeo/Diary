@@ -168,9 +168,7 @@ const Navbar = ({ login, logout, isAuthenticated, loading, errors }) => {
     }
   }
 
-  if (isAuthenticated) {
-    // setOpen(false)
-    // console.log(isAuthenticated)
+  if (isAuthenticated && !loading) {
     setTimeout(() => {
       return <Redirect to='/notes' />
     }, 1000)
@@ -274,7 +272,7 @@ const Navbar = ({ login, logout, isAuthenticated, loading, errors }) => {
                             }
                             <Link to='#'><Typography>Forgot password?</Typography></Link>
                             <Typography gutterBottom>Don't have an account? <Link to='/signup'>Sign up</Link></Typography>
-                            <Button className={classes.margin} variant='contained' color='primary' onClick={onSubmit}>Login</Button>
+                            <Button className={classes.margin} variant='contained' color='primary' type='submit' onClick={onSubmit}>Login</Button>
                           </form>
                         </Grid>
 
@@ -291,7 +289,6 @@ const Navbar = ({ login, logout, isAuthenticated, loading, errors }) => {
               </>) : (
               <>
                 <Link to='/'><Button>Home</Button></Link>
-                <Link to='#'><Button>Features</Button></Link>
                 <Link to='/notes'><Button>Notes</Button></Link>
                 <Button onClick={handleLogout}>Logout</Button>
               </>

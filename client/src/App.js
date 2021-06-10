@@ -9,6 +9,7 @@ import Routes from './components/routing/Routes'
 import Signup from './pages/Signup'
 import setAuthToken from './utils/setAuthToken'
 import { loadUser } from './actions/auth'
+import Snackbar from './utils/CustomSnackbar'
 
 const theme = createMuiTheme({
   typography: {
@@ -24,7 +25,7 @@ if (localStorage.token) {
   setAuthToken(localStorage.token)
 }
 
-function App() {
+const App = () => {
   useEffect(() => {
     store.dispatch(loadUser())
   }, [])
@@ -33,6 +34,7 @@ function App() {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <Router>
+          {/* <Snackbar /> */}
           <Switch>
             <Landing exact path='/' />
             <Signup exact path='/signup' />
