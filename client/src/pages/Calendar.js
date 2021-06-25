@@ -18,6 +18,7 @@ import { dummy } from './demo-data/dummy'
 
 const Calendar = () => {
   const [data, setData] = useState(dummy)
+  const today = new Date(Date.now()).toLocaleString().split(',')[0]
   const [currentDate, setCurrentDate] = useState('2018-06-27')
   const [addedAppointment, setAddedAppointment] = useState({})
   const [appointmentChanges, setAppointmentChanges] = useState({})
@@ -67,7 +68,7 @@ const Calendar = () => {
           editingAppointment={editingAppointment}
           onEditingAppointmentChange={changeEditingAppointment}
         />
-        <WeekView startDayHour={9} endDayHour={17} />
+        <WeekView startDayHour={9} endDayHour={20} />
         <Toolbar />
         <DateNavigator />
         <TodayButton />

@@ -238,8 +238,6 @@ const Layout = ({
             Today is {format(new Date(), 'do MMMM Y')}
           </Typography>
 
-          {/* TODO: display weather */}
-
           {/* Search Tab */}
           <div className={classes.search}>
             <div className={classes.searchIcon}>
